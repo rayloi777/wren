@@ -129,6 +129,10 @@ OBJECTS += $(OBJDIR)/resolution.o
 OBJECTS += $(OBJDIR)/slots.o
 OBJECTS += $(OBJDIR)/test.o
 OBJECTS += $(OBJDIR)/user_data.o
+OBJECTS += $(OBJDIR)/vec4.o
+OBJECTS += $(OBJDIR)/ecs.o
+OBJECTS += $(OBJDIR)/ecs_wren.o
+OBJECTS += $(OBJDIR)/ecs_test.o
 
 # Rules
 # #############################################
@@ -245,6 +249,18 @@ $(OBJDIR)/main.o: ../../test/main.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/test.o: ../../test/test.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/vec4.o: ../../test/ray/vec4.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ecs.o: ../../test/api/ecs/ecs.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ecs_wren.o: ../../test/api/ecs/ecs_wren.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ecs_test.o: ../../test/api/ecs/ecs_test.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

@@ -55,6 +55,12 @@ WrenForeignMethodFn APITest_bindForeignMethod(
   method = userDataBindMethod(fullName);
   if (method != NULL) return method;
 
+  method = vec4BindMethod(fullName);
+  if (method != NULL) return method;
+
+  method = ecsBindMethod(fullName);
+  if (method != NULL) return method;
+
   fprintf(stderr,
       "Unknown foreign method '%s' for test '%s'\n", fullName, testName);
   exit(1);
@@ -65,7 +71,7 @@ WrenForeignClassMethods APITest_bindForeignClass(
     WrenVM* vm, const char* module, const char* className)
 {
   WrenForeignClassMethods methods = { NULL, NULL };
-  if (strncmp(module, "./test/api", 7) != 0) return methods;
+  if (strncmp(module, "./test/", 7) != 0) return methods;
 
   foreignClassBindClass(className, &methods);
   if (methods.allocate != NULL) return methods;
@@ -74,6 +80,12 @@ WrenForeignClassMethods APITest_bindForeignClass(
   if (methods.allocate != NULL) return methods;
 
   slotsBindClass(className, &methods);
+  if (methods.allocate != NULL) return methods;
+
+  vec4BindClass(className, &methods);
+  if (methods.allocate != NULL) return methods;
+
+  ecsBindClass(className, &methods);
   if (methods.allocate != NULL) return methods;
 
   fprintf(stderr,

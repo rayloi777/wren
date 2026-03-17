@@ -23,6 +23,8 @@
 #include "resolution.h"
 #include "slots.h"
 #include "user_data.h"
+#include "../ray/vec4.h"
+#include "ecs/ecs_test.h"
 
 int APITest_Run(WrenVM* vm, const char* inTestName);
 
@@ -33,5 +35,4 @@ WrenForeignMethodFn APITest_bindForeignMethod(
 WrenForeignClassMethods APITest_bindForeignClass(
     WrenVM* vm, const char* module, const char* className);
 
-
-#endif //WREN_API_TESTS_H
+#endif

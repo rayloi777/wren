@@ -427,6 +427,7 @@
   {
     if(strncmp(module, "test/api", 8) == 0) return true;
     if(strncmp(module, "test/benchmark", 14) == 0) return true;
+    if(strncmp(module, "test/ray", 7) == 0) return true;
     return false;
   }
 

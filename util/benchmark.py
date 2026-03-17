@@ -44,6 +44,9 @@ WREN_BIN = os.path.join(WREN_DIR, 'bin')
 BENCHMARK_DIR = os.path.join('test', 'benchmark')
 BENCHMARK_DIR = relpath(BENCHMARK_DIR).replace("\\", "/")
 
+VEC4_BENCHMARK_DIR = os.path.join('test', 'ray')
+VEC4_BENCHMARK_DIR = relpath(VEC4_BENCHMARK_DIR).replace("\\", "/")
+
 # How many times to run a given benchmark.
 NUM_TRIALS = 10
 
@@ -93,6 +96,28 @@ BENCHMARK("map_numeric", r"""2000001000000""")
 BENCHMARK("map_string", r"""12799920000""")
 
 BENCHMARK("string_equals", r"""3000000""")
+
+BENCHMARK("loop", r"""10000000""")
+
+BENCHMARK("list_construct", r"""499999500000""")
+
+BENCHMARK("map_construct", r"""124999750000000""")
+
+BENCHMARK("string_concat", r"""100000""")
+
+BENCHMARK("vec4_add", r"""^add: [\d\.]+""")
+
+BENCHMARK("vec4_sub", r"""^sub: [\d\.]+""")
+
+BENCHMARK("vec4_mul", r"""^mul: [\d\.]+""")
+
+BENCHMARK("vec4_div", r"""^div: [\d\.]+""")
+
+BENCHMARK("vec4_dot", r"""^dot: [\d\.]+""")
+
+BENCHMARK("vec4_length", r"""^length: [\d\.]+""")
+
+BENCHMARK("vec4_normalize", r"""^normalize: [\d\.]+""")
 
 LANGUAGES = [
   ("wren",           [os.path.join(WREN_BIN, 'wren_test')], ".wren"),
@@ -150,7 +175,13 @@ def run_trial(benchmark, language):
   """Runs one benchmark one time for one language."""
   executable_args = language[1]
 
-  benchmark_path = os.path.join(BENCHMARK_DIR, benchmark[0] + language[2])
+  # Use vec4 benchmark directory for vec4 benchmarks
+  if benchmark[0].startswith("vec4"):
+    benchmark_dir = VEC4_BENCHMARK_DIR
+  else:
+    benchmark_dir = BENCHMARK_DIR
+
+  benchmark_path = os.path.join(benchmark_dir, benchmark[0] + language[2])
   benchmark_path = relpath(benchmark_path).replace("\\", "/")
 
   args = []
@@ -182,7 +213,13 @@ def run_benchmark_language(benchmark, language, benchmark_result):
   name = "{0} - {1}".format(benchmark[0], language[0])
   print("{0:30s}".format(name), end=' ')
 
-  bpath = os.path.join(BENCHMARK_DIR, benchmark[0] + language[2])
+  # Use vec4 benchmark directory for vec4 benchmarks
+  if benchmark[0].startswith("vec4"):
+    benchmark_dir = VEC4_BENCHMARK_DIR
+  else:
+    benchmark_dir = BENCHMARK_DIR
+
+  bpath = os.path.join(benchmark_dir, benchmark[0] + language[2])
   if not os.path.exists(bpath):
     print("No implementation for this language: " + bpath)
     return

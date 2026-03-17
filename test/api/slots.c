@@ -189,5 +189,8 @@ WrenForeignMethodFn slotsBindMethod(const char* signature)
 
 void slotsBindClass(const char* className, WrenForeignClassMethods* methods)
 {
-  methods->allocate = foreignClassAllocate;
+  if (strcmp(className, "ForeignType") == 0)
+  {
+    methods->allocate = foreignClassAllocate;
+  }
 }

@@ -404,8 +404,9 @@ def run_example(path):
   run_script(WREN_APP, path, "example")
 
 
-walk(join(WREN_DIR, 'test'), run_test, ignored=['api', 'benchmark'])
+walk(join(WREN_DIR, 'test'), run_test, ignored=['api', 'benchmark', 'ray'])
 walk(join(WREN_DIR, 'test', 'api'), run_api_test)
+walk(join(WREN_DIR, 'test', 'ray'), run_api_test)
 walk(join(WREN_DIR, 'example'), run_example)
 
 print_line()
