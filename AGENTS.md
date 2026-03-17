@@ -183,6 +183,335 @@ projects/       # Build system files
 util/           # Build and test utilities
 ```
 
+## Wren Language Basics
+
+### Variables and Data Types
+
+```wren
+// Variables (dynamic typing)
+var x = 10
+var name = "Wren"
+var isActive = true
+var nothing = null
+
+// Numbers (double-precision floats)
+var pi = 3.14159
+var integer = 42
+
+// Booleans
+var flag = true
+```
+
+### Operators
+
+```wren
+// Arithmetic
+var a = 10 + 5    // 15
+var b = 10 - 5    // 5
+var c = 10 * 5    // 50
+var d = 10 / 5    // 2
+var e = 10 % 3    // 1 (remainder)
+
+// Comparison
+5 < 10            // true
+5 == 5            // true
+5 != 3            // true
+
+// Logical (and returns first false or last value, or returns first true or last value)
+true and false   // false
+false or true    // true
+!true            // false
+
+// String
+"hello" + " " + "world"  // "hello world"
+"ab" * 3                 // "ababab" (repetition)
+```
+
+### String
+
+```wren
+var s = "Hello World"
+
+// String interpolation (important!)
+"Hello %(name)"          // "Hello Wren"
+"%(1 + 2)"              // "3"
+
+// Common methods
+"hello".contains("ell") // true
+"hello".indexOf("l")    // 2
+"hello".startsWith("he")// true
+"hello".endsWith("lo")  // true
+"hello".split("e")      // ["h", "llo"]
+"hello".replace("l", "x") // "hexxo"
+"  hello ".trim()       // "hello"
+"hello".toUpperCase()   // "HELLO"
+"hello"[0]              // "h" (subscript)
+
+// Length
+"hello".byteCount       // 5
+"hello".codePointCount  // 5
+```
+
+### List
+
+```wren
+var list = [1, 2, 3, "four", true]
+
+// Access
+list[0]                 // 1
+list[-1]                // last element
+list[0..2]              // [1, 2] (range slice)
+
+// Modify
+list.add(4)             // append
+list.insert(1, 99)      // insert at index
+list.removeAt(0)        // remove by index
+list.remove(3)          // remove first match
+list.clear()           // clear all
+
+// Properties
+list.count              // element count
+list.isEmpty           // boolean
+
+// Functional methods
+[1, 2, 3].map {|x| x * 2}           // [2, 4, 6]
+[1, 2, 3, 4].where {|x| x % 2 == 0} // [2, 4]
+[1, 2, 3].reduce(0) {|a, x| a + x}   // 6
+[1, 2, 3].any {|x| x > 2}            // true
+[1, 2, 3].all {|x| x > 0}           // true
+[1, 2, 3].each {|x| System.print(x)}
+```
+
+### Map (Dictionary)
+
+```wren
+var map = {"a": 1, "b": 2}
+
+// Access
+map["a"]                // 1
+map["c"] = 3            // add/modify
+
+// Methods
+map.containsKey("a")   // true
+map.remove("a")         // delete
+map.count               // size
+map.isEmpty            // boolean
+map.clear()            // clear all
+
+// Iterate
+for (key in map.keys) {
+  System.print("%(key): %(map[key])")
+}
+```
+
+### Classes
+
+```wren
+// Basic class with constructor
+class Person {
+  construct new(name, age) {
+    _name = name
+    _age = age
+  }
+
+  // Getter
+  name { _name }
+  age { _age }
+
+  // Setter
+  name=(value) { _name = value }
+
+  // Method
+  greet {
+    System.print("Hello, I am %(_name)")
+  }
+
+  // Static
+  static species { "Human" }
+}
+
+var person = Person.new("Alice", 25)
+person.name              // "Alice"
+Person.species           // "Human"
+
+// Inheritance
+class Dog is Animal {
+  construct new(name) {
+    super(name)
+  }
+  speak { "Woof!" }
+}
+
+// Operator overloading
+class Vec2 {
+  construct new(x, y) {
+    _x = x
+    _y = y
+  }
+
+  + (other) {
+    return Vec2.new(_x + other._x, _y + other._y)
+  }
+
+  toString { "(%(_x), %(_y))" }
+}
+```
+
+### Control Flow
+
+```wren
+// If/Else
+if (condition) {
+  // then
+} else if (condition2) {
+  // else if
+} else {
+  // else
+}
+
+// Ternary
+var result = condition ? "yes" : "no"
+
+// While
+var i = 0
+while (i < 5) {
+  System.print(i)
+  i = i + 1
+}
+
+// For (range)
+for (i in 0..5) {      // 0, 1, 2, 3, 4
+  System.print(i)
+}
+
+// For (iterate)
+for (item in [1, 2, 3]) {
+  System.print(item)
+}
+
+// Break/Continue
+while (true) {
+  if (done) break
+  if (skip) continue
+}
+```
+
+### Fn (Functions)
+
+```wren
+// Function as value
+var add = Fn.new {|a, b| a + b}
+add.call(1, 2)         // 3
+
+// No parameters
+var greet = Fn.new { System.print("Hello!")}
+greet.call()
+
+// With list methods
+var list = [1, 2, 3]
+list.map(Fn.new {|x| x * 2})  // [2, 4, 6]
+```
+
+### Fiber (Coroutine)
+
+```wren
+// Create and yield
+var fiber = Fiber.new {
+  System.print("Start")
+  Fiber.yield()
+  System.print("After yield")
+}
+
+fiber.call()  // prints "Start"
+fiber.call()  // prints "After yield"
+
+// With values
+var f = Fiber.new {
+  var result = Fiber.yield(42)
+  System.print(result)
+}
+
+var initial = f.call()    // 42
+f.call("hello")           // prints "hello"
+
+// Error handling
+var error = Fiber.new {
+  Fiber.abort("Something wrong")
+}.try()
+System.print(error)  // "Something wrong"
+```
+
+### Num Methods
+
+```wren
+var n = 3.7
+
+// Type checking
+n.isInteger              // false
+n.isInfinity             // false
+n.isNaN                  // false
+
+// Rounding
+n.round                  // 4
+n.floor                  // 3
+n.ceil                   // 4
+
+// Math
+5.sqrt                   // 2.236...
+4.sqrt                   // 2
+3.sin                    // 0.141...
+3.abs                    // 3
+
+// Constants
+Num.pi                   // 3.14159...
+Num.e                    // 2.71828...
+```
+
+### System
+
+```wren
+System.print("Hello")    // print + newline
+System.write("Hello")   // print only
+System.gc()             // trigger garbage collection
+System.clock            // runtime in seconds
+```
+
+### Type Conversion
+
+```wren
+// Number to string
+42.toString              // "42"
+"%(42)"                  // "42"
+
+// String to number
+"42".toNum               // 42
+
+// String interpolation (most common)
+"Value: %(x + y)"        // "Value: 30"
+```
+
+### Range
+
+```wren
+var r1 = 0..5            // 0, 1, 2, 3, 4 (inclusive)
+var r2 = 0...5           // 0, 1, 2, 3, 4 (exclusive)
+
+// List slicing
+[1, 2, 3, 4, 5][0..3]   // [1, 2, 3]
+```
+
+### Important Notes
+
+1. **No implicit type coercion**: Wren does not automatically convert between types. Use string interpolation `"%(expr)"` or `.toString()` for string conversion.
+
+2. **Semicolons optional**: `var x = 10` works the same as `var x = 10;`
+
+3. **Allman braces**: Opening brace on new line.
+
+4. **2-space indentation**: Not tabs.
+
+5. **Private fields**: Prefix with underscore `_field`.
+
 ## Common Tasks
 
 ### Adding a New Core Method
