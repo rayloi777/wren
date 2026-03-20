@@ -1,3 +1,6 @@
+import "random" for Random
+import "a" for A
+
 class Game {
   construct new() {
     _frameCount = 0
@@ -5,11 +8,20 @@ class Game {
     _lastPrintTime = 0
     _printInterval = 1.0
     _initialized = false
+    _random = Random.new()
   }
 
   init() {
     _initialized = true
-    System.print("Game initialized")
+    System.print("- Game initialized")
+    
+    var m = "Hello, Wren!"
+    System.print("- String: %(m)")
+
+    var map = ["A", "B", "C"]
+    System.print("- Map: %(map)")
+    map.add("D")
+    System.print("- Map after adding 'D': %(map)")
   }
 
   update(dt) {
@@ -21,6 +33,9 @@ class Game {
     if (_totalTime - _lastPrintTime >= _printInterval) {
       System.print("Frame: %(_frameCount) Time: %(_totalTime) dt: %(dt)")
       _lastPrintTime = _totalTime
+
+      //------ Test random number generation
+      System.print("- Random number: %(_random.float())")
     }
   }
 
@@ -30,3 +45,4 @@ class Game {
 }
 
 var game = Game.new()
+var a = A.new()
